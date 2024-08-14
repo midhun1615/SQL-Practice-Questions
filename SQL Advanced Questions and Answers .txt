@@ -1,0 +1,60 @@
+SQL Advanced Questions and Answers -- Part 3
+--------------------------------------------
+
+1- write a query to get region wise count of return orders
+
+SELECT O.Region,COUNT(DISTINCT R.order_Id) AS Count_Reason FROM Orders O
+LEFT JOIN returns R ON O.Order_ID = R.order_Id WHERE R.return_reason IS NOT NULL
+GROUP BY O.Region
+---------------------------------------------------------------------------------------------------------------------------------------------
+2- write a query to get category wise sales of orders that were not returned
+
+SELECT O.Category,SUM(sales) AS TOTAL_SALES FROM Orders O
+LEFT JOIN returns R ON O.Order_ID = R.order_Id
+WHERE R.return_reason IS NULL
+GROUP BY O.Category
+---------------------------------------------------------------------------------------------------------------------------------------------
+3- write a query to print dep name and average salary of employees in that dep .
+
+SELECT D.dep_name,AVG(E.SALARY) AS AVG_SALARY FROM employee E
+LEFT JOIN dept D ON E.dept_id = D.dep_id
+GROUP BY D.dep_name
+---------------------------------------------------------------------------------------------------------------------------------------------
+4- write a query to print dep names where none of the emplyees have same salary.
+
+SELECT D.dep_name,E.salary, COUNT(SALARY) AS Duplicate_sal FROM employee E
+LEFT JOIN dept D ON E.dept_id = D.dep_id
+GROUP BY D.dep_name,E.salary HAVING COUNT(*)=1
+---------------------------------------------------------------------------------------------------------------------------------------------
+---5- write a query to print sub categories where we have all 3 kinds of returns (others,bad quality,wrong items)
+
+SELECT o.Sub_Category,r.return_reason FROM orders O
+left join returns R on o.Order_ID = R.order_Id
+WHERE r.return_reason in ('others','bad quality','wrong items')
+GROUP BY o.Sub_Category,r.return_reason
+---------------------------------------------------------------------------------------------------------------------------------------------
+---6- write a query to find cities where not even a single order was returned.
+SELECT O.City,r.return_reason FROM Orders O
+left join returns R on O.Order_ID = R.order_Id
+where r.order_Id is null
+---------------------------------------------------------------------------------------------------------------------------------------------
+---7- write a query to find top 3 subcategories by sales of returned orders in east region
+SELECT top 3 o.Sub_Category,r.return_reason,SUM(sales) as total_sales FROM orders O
+left join returns R on o.Order_ID = R.order_Id
+WHERE r.return_reason in ('others','bad quality','wrong items')
+GROUP BY o.Sub_Category,r.return_reason
+order by total_sales desc
+---------------------------------------------------------------------------------------------------------------------------------------------
+---8- write a query to print dep name for which there is no employee
+SELECT D.dep_name,E.emp_name FROM employee E
+right Join dept D on E.dept_id = D.dep_id
+Where E.emp_name is null
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+---9- write a query to print employees name for dep id is not avaiable in dept table
+
+SELECT E.emp_name,D.dep_id FROM employee E
+left Join dept D on E.dept_id = D.dep_id
+WHERE D.dep_id is null
+---------------------------------------------------------------------------------------------------------------------------------------------
+
